@@ -44,9 +44,6 @@
 
     /* --- PITCH COLORS --- */
 
-    /* https://oklch.com/#65.2,0.1901,253.21,100 */
-    /* https://ok-color-picker.netlify.app/#cfe5ff */
-
     --heiban: dodgerblue; /* #39bae6 */
     --atamadaka: #ec464f;
     --nakadaka: #ff8f40;
@@ -58,12 +55,6 @@
     --nakadaka-foreground: hsl(24, 100%, 90%);
     --odaka-foreground: hsl(100, 100%, 90%);
     --kifuku-foreground: hsl(261, 100%, 90%);
-
-    /* --light-mode-heiban: #1aa0ce;
-    --light-mode-atamadaka: #e92a35;
-    --light-mode-nakadaka: #ff6b03;
-    --light-mode-odaka: #61ad3b;
-    --light-mode-kifuku: #7e53c4; */
 }
 
 /* ------------------------ MAIN ------------------------ */
