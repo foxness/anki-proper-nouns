@@ -28,6 +28,7 @@
 
     <div class='divider'></div>
 
+    <div class='bar'></div>
     <div class='reading'>{{Main_Reading}}</div>
     <div class='meaning'>{{Other_Readings}}</div>
     <div class='notes'>
@@ -204,6 +205,7 @@
         cardTrueReading = `{{Main_Reading}}`
         cardMeaning = `{{Other_Readings}}`
         cardTrueSentence = `{{Explanation}}`
+        cardMainReadingType = `{{Main_Reading_Type}}`
         cardPitchPosition = `0`
 
         // additional anki fields addon
@@ -312,6 +314,27 @@
         }
 
         readingElement.innerHTML = cardExpression
+    }
+
+    function populateBar() {
+        let barElement = document.querySelector('.bar')
+
+        let innerElement = document.createElement('div')
+        let barClass = ''
+
+        if (cardMainReadingType === 'loc') {
+            barClass = 'barLocation'
+        } else if (cardMainReadingType === 'fam') {
+            barClass = 'barFamily'
+        } else if (cardMainReadingType === 'per') {
+            barClass = 'barPerson'
+        } else {
+            barClass = 'barLocation'
+            alert('unknown Main_Reading_Type')
+        }
+
+        innerElement.classList.add(barClass)
+        barElement.replaceChildren(innerElement)
     }
 
     function varyReadingKana() {
@@ -1166,6 +1189,7 @@
         fixCopypaste()
 
         // populateReading()
+        // populateBar()
         // varyReadingKana()
         // addPitchToReading()
         // addLinkToReading()
@@ -1185,8 +1209,9 @@
         fixCopypaste()
 
         // populateReading()
+        populateBar()
         varyReadingKana()
-        addPitchToReading()
+        // addPitchToReading()
         addLinkToReading()
         addLinkToImage()
 

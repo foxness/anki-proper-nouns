@@ -42,6 +42,12 @@
     --error-field: red;
     --error-super: #ff2c2c;
 
+    /* --- TYPE COLORS --- */
+
+    --location: teal;
+    --family: slateblue;
+    --person: orangered;
+
     /* --- PITCH COLORS --- */
 
     --heiban: dodgerblue; /* #39bae6 */
@@ -208,10 +214,46 @@
     border-radius: 1em;
 }
 
+/* ------------------------ BAR ------------------------ */
+
+.bar {
+    margin-top: -0.1em;
+    /* font-size: 180%;
+    font-weight: 600; */
+    /* color: var(--default-reading); */
+
+    display: flex;
+    /* flex-direction: column; */
+    /* align-items: center; */
+}
+
+.bar > div {
+    /* margin-top: -0.1em;
+    font-size: 180%;
+    font-weight: 600;
+    color: var(--default-reading); */
+    height: 0.4rem;
+    width: 16em;
+
+    /* background-color: blue; */
+}
+
+.barLocation {
+    background-color: var(--location);
+}
+
+.barFamily {
+    background-color: var(--family);
+}
+
+.barPerson {
+    background-color: var(--person);
+}
+
 /* ------------------------ READING ------------------------ */
 
 .reading {
-    margin-top: -0.1em;
+    margin-top: -0.14em;
     font-size: 180%;
     font-weight: 600;
     color: var(--default-reading);
