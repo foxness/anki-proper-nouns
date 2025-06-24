@@ -5,7 +5,7 @@
 
     /* --- GENERAL --- */
 
-    --text-max-width: 25em;
+    --text-max-width: 36em;
     --blur-amount: 0.3em;
 
     /* --- GENERAL COLORS --- */
@@ -343,8 +343,9 @@
 
 .sentence {
     max-width: var(--text-max-width);
-    font-size: 120%;
-    line-height: 1.45em;
+    font-size: 80%;
+    /* line-height: 1.45em; */
+    text-align: left;
 }
 
 .sentence {

@@ -388,25 +388,6 @@
         // hintElement.innerHTML = cardSentence
     }
 
-    function markExpressionInSentence() {
-        markExpressionInElement('hint')
-        markExpressionInElement('sentence')
-    }
-
-    function highlightErrorsInFields() {
-        highlightErrorInExpression()
-
-        if (riverIsFrontOfCard) {
-            return
-        }
-
-        highlightErrorInReading()
-        highlightErrorInMeaning()
-        // highlightErrorInNotes()
-        highlightErrorInSentence()
-        highlightErrorInHint()
-    }
-
     function highlightNotes() {
         let noteElement = document.querySelector('.notes')
         if (noteElement.childNodes.length === 0) {
@@ -857,212 +838,6 @@
         return makeLinkElement(link, inner)
     }
 
-    // ---------------- EXPRESSION MARKING ----------------
-
-    function getUnhighlightedIndices(sentence, expression, specialTagStart, specialTagEnd) {
-        let index = 0
-        let unhighlightedIndices = []
-
-        while (true) {
-            let expressionIndex = sentence.indexOf(expression, index)
-            if (expressionIndex === -1) {
-                break
-            }
-
-            let startTagIndex = sentence.indexOf(specialTagStart, index)
-
-            if (startTagIndex === -1 || expressionIndex < startTagIndex) {
-                unhighlightedIndices.push(expressionIndex)
-                index = expressionIndex + expression.length
-                continue
-            }
-
-            let startTagEndIndex = startTagIndex + specialTagStart.length
-            let endTagIndex = sentence.indexOf(specialTagEnd, startTagEndIndex)
-            if (endTagIndex === -1) {
-                alert('Found unclosed special tag')
-                break
-            }
-
-            index = endTagIndex + specialTagEnd.length
-        }
-
-        return unhighlightedIndices
-    }
-
-    function highlightExpression(sentence, expression, unhighlightedIndices, highlightTagStart, highlightTagEnd) {
-        if (unhighlightedIndices.length === 0) {
-            return sentence
-        }
-
-        let result = ''
-        let index = 0
-        for (let i = 0; i < unhighlightedIndices.length; i++) {
-            let middleChunkLeftIndex = unhighlightedIndices[i]
-            let middleChunkRightIndex = middleChunkLeftIndex + expression.length
-
-            let leftChunk = sentence.substring(index, middleChunkLeftIndex)
-
-            let middleChunk = sentence.substring(middleChunkLeftIndex, middleChunkRightIndex)
-            if (middleChunk !== expression) {
-                alert('Something went wrong')
-            }
-
-            result += leftChunk + highlightTagStart + expression + highlightTagEnd
-
-            if (i + 1 === unhighlightedIndices.length) {
-                let rightChunk = sentence.substring(middleChunkRightIndex, sentence.length)
-                result += rightChunk
-            }
-
-            index = middleChunkRightIndex
-        }
-
-        return result
-    }
-
-    function autoBoldHighlight(sentence, expression) {
-        let boldTagStart = '<b>'
-        let boldTagEnd = '</b>'
-
-        let unhighlightedIndices = getUnhighlightedIndices(sentence, expression, boldTagStart, boldTagEnd)
-        let highlighted = highlightExpression(sentence, expression, unhighlightedIndices, boldTagStart, boldTagEnd)
-
-        return highlighted
-    }
-
-    function markExpressionInElement(elementClass) {
-        let element = document.querySelector('.' + elementClass)
-        if (element === null) {
-            return
-        }
-
-        let sentence = element.innerHTML
-        if (sentence.length === 0 || cardExpression.length === 0) {
-            return
-        }
-
-        let expressionHighlighted = autoBoldHighlight(sentence, cardExpression)
-
-        let hiraganaReading = translateKana(cardReading, true)
-        let katakanaReading = translateKana(cardReading, false)
-
-        let readingHighlighted
-        if (cardReading === cardExpression) {
-            readingHighlighted = expressionHighlighted
-        } else {
-            readingHighlighted = autoBoldHighlight(expressionHighlighted, cardReading)
-        }
-
-        if (cardReading !== hiraganaReading) {
-            readingHighlighted = autoBoldHighlight(readingHighlighted, hiraganaReading)
-        }
-
-        if (cardReading !== katakanaReading) {
-            readingHighlighted = autoBoldHighlight(readingHighlighted, katakanaReading)
-        }
-
-        element.innerHTML = readingHighlighted
-    }
-
-    // ---------------- ERROR CHECKING ----------------
-
-    function checkHasWhitespaceOrEntity(targetString) {
-        let hasWhitespaceAtEdges = targetString !== targetString.trim()
-        let hasEntity = /\&[a-z]+;/.test(targetString) // &nbsp; and stuff
-
-        return hasWhitespaceAtEdges || hasEntity
-    }
-
-    function checkHasSimpleError(targetString) {
-        let hasWhitespaceOrEntity = checkHasWhitespaceOrEntity(targetString)
-        let hasTag = /<\/?[a-z][\s\S]*>/i.test(targetString) // <br> and stuff
-
-        return hasWhitespaceOrEntity || hasTag
-    }
-
-    function checkHasSentenceError(targetString) {
-        let hasWhitespaceOrEntity = checkHasWhitespaceOrEntity(targetString)
-        let hasNonBoldTag = /<\/?(?!b>)[a-z][\s\S]*>/i.test(targetString)
-
-        return hasWhitespaceOrEntity || hasNonBoldTag
-    }
-
-    function highlightAsErroredIfNeeded(hasError, targetClass) {
-        if (!hasError) {
-            return
-        }
-
-        let targetElement = document.querySelector('.' + targetClass)
-        if (targetElement === null) {
-            return
-        }
-
-        targetElement.classList.add('errorField')
-    }
-
-    function highlightErrorInExpression() {
-        let targetClass = 'expression'
-        let targetString = cardExpression
-
-        let hasError = checkHasSimpleError(targetString)
-        highlightAsErroredIfNeeded(hasError, targetClass)
-    }
-
-    function highlightErrorInReading() {
-        let targetClass = 'reading'
-        let targetString = cardTrueReading
-
-        let hasError = checkHasSimpleError(targetString)
-        highlightAsErroredIfNeeded(hasError, targetClass)
-    }
-
-    function highlightErrorInMeaning() {
-        let targetClass = 'meaning'
-        let targetString = cardMeaning
-
-        let hasError = checkHasSimpleError(targetString)
-        highlightAsErroredIfNeeded(hasError, targetClass)
-    }
-
-    // function highlightErrorInNotes() {
-    //     let targetClass = 'notes'
-    //     let targetString = cardNotes
-
-    //     let needsEditing = targetString.startsWith('<div') // = is autofilled yomitan dict entry
-    //     if (needsEditing) {
-    //         let noteElement = document.querySelector('.notes')
-    //         noteElement.replaceChildren(document.createTextNode('[[ NEEDS EDITING ]]'))
-
-    //         highlightAsErroredIfNeeded(true, targetClass)
-    //         return
-    //     }
-
-    //     let hasWhitespaceAtEdges = targetString !== targetString.trim()
-    //     let hasNonNbspEntity = /\&(?!nbsp)[a-z]+;/.test(targetString) // &nbsp; is ok
-    //     let hasNonBrTag = /<\/?(?!br)[a-z][\s\S]*>/i.test(targetString) // all tags except <br>
-    //     let hasBrAtEdges = /^(<br>.*|.*<br>)$/i.test(targetString)
-
-    //     let hasError = hasWhitespaceAtEdges || hasNonNbspEntity || hasNonBrTag || hasBrAtEdges
-    //     highlightAsErroredIfNeeded(hasError, targetClass)
-    // }
-
-    function highlightErrorInSentence() {
-        let targetClass = 'sentence'
-        let targetString = cardTrueSentence
-
-        let hasError = checkHasSentenceError(targetString)
-        highlightAsErroredIfNeeded(hasError, targetClass)
-    }
-
-    function highlightErrorInHint() {
-        let targetClass = 'hint'
-        let targetString = cardHint
-
-        let hasError = checkHasSentenceError(targetString)
-        highlightAsErroredIfNeeded(hasError, targetClass)
-    }
-
     // ---------------- NOTE DEFINITION HIGHLIGHTING ----------------
 
     function splitIntoKanaGroups(expression) {
@@ -1394,9 +1169,7 @@
 
         // populateSentence()
         populateHint()
-        markExpressionInSentence()
-        
-        highlightErrorsInFields()
+
         // highlightNotes()
         // blurEnglishText()
         varyJapaneseFont()
@@ -1415,9 +1188,7 @@
 
         populateSentence()
         populateHint()
-        markExpressionInSentence()
 
-        // highlightErrorsInFields()
         // highlightNotes()
         blurEnglishText()
         varyJapaneseFont()
