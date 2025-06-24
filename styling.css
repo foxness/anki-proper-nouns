@@ -1,103 +1,794 @@
-:root {
-    /* COLOUR PALETTE */
-    --accent: #e74c3c;
-    --secondary: #8e44ad;
-    --muted: #888888;
 
-    /* FONT SIZES (desktop defaults) */
-    --font-vocab: 5.3125rem;
-    --font-read: 1.44rem;
-    --font-md: 1.1rem;
-    --font-sm: 0.9rem;
+/* ------------------------ VARIABLES ------------------------ */
+
+:root {
+
+    /* --- GENERAL --- */
+
+    --text-max-width: 25em;
+    --blur-amount: 0.3em;
+
+    /* --- GENERAL COLORS --- */
+
+    --foreground: #fcfcfc;
+    --default-reading: #f8e1b5;
+    --default-meaning: #bccfff; /* dodgerblue-like */
+    --divider: #727272;
+    --information: #818181;
+    --background-secondary: #3b3b3b;
+
+    /* cool colors: aquamarine yellow 27a6dd */
+
+    /* --- ACCENT COLORS --- */
+
+    --accent-primary: #37e3b2;
+    --accent-secondary: var(--foreground);
+
+    /* --- INDICATOR COLORS --- */
+
+    --indicator-new: #3772ff;
+    --indicator-preview: var(--accent-primary);
+
+    /* --- NOTE COLORS --- */
+
+    --notes-simple: lightslategray;
+    --notes-definition-expression: lightseagreen;
+    --notes-definition-reading: lemonchiffon;
+    --notes-definition-meaning: mediumaquamarine;
+    --notes-definition-furigana: var(--accent-secondary);
+
+    /* --- ERROR COLORS --- */
+
+    --error-field: red;
+    --error-super: #ff2c2c;
+
+    /* --- PITCH COLORS --- */
+
+    /* https://oklch.com/#65.2,0.1901,253.21,100 */
+    /* https://ok-color-picker.netlify.app/#cfe5ff */
+
+    --heiban: dodgerblue; /* #39bae6 */
+    --atamadaka: #ec464f;
+    --nakadaka: #ff8f40;
+    --odaka: #6cbf43;
+    --kifuku: #af85f4;
+
+    --heiban-foreground: hsl(212, 100%, 90%);
+    --atamadaka-foreground: hsl(2, 100%, 94%);
+    --nakadaka-foreground: hsl(24, 100%, 90%);
+    --odaka-foreground: hsl(100, 100%, 90%);
+    --kifuku-foreground: hsl(261, 100%, 90%);
+
+    /* --light-mode-heiban: #1aa0ce;
+    --light-mode-atamadaka: #e92a35;
+    --light-mode-nakadaka: #ff6b03;
+    --light-mode-odaka: #61ad3b;
+    --light-mode-kifuku: #7e53c4; */
 }
 
-/* MOBILE OVERRIDES */
-@media (max-width: 600px) {
-    :root {
-        --font-vocab: 4.375rem;
-        --font-read: 1rem;
+/* ------------------------ MAIN ------------------------ */
+
+* {
+    /* border: 0.05em dotted white; */
+    box-sizing: border-box;
+}
+
+.card {
+    margin-top: 0.8em;
+    margin-bottom: 0.8em;
+
+    /* offsets scrollbar width, big brain stuff */
+    padding-left: calc(100vw - 100%);
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    font-family: "Noto Sans JP", "Hiragino Sans", "Kosugi Maru", "Meiryo", "Hiragino Kaku Gothic Pro", sans-serif;
+    font-size: 22px;
+    color: var(--foreground);
+
+    /* centers wrapped text in long fields, dont remove */
+    text-align: center;
+}
+
+/* ------------------------ EXPRESSION ------------------------ */
+
+.expressionContainer {
+    position: relative;
+    font-size: 260%;
+}
+
+.expression {
+    line-height: 1em;
+}
+
+@media DISABLED {
+    /* uncomment for expression with furigana layout */
+
+    .expression {
+        display: flex;
+        align-items: flex-end;
+        height: 1.8em;
+    }
+
+    .expression rt {
+        user-select: none;
+        color: var(--accent-primary);
     }
 }
 
-/* BASE CARD */
-.card {
-    font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
-    font-size: 1rem;
-    text-align: center;
-    padding: 16px;
-    max-width: 800px;
-    margin: 0 auto;
-}
+/* ------------------------ LINK HIGHLIGHTING ------------------------ */
 
-/* EXPRESSION (front & back) */
-.expression {
-    font-size: var(--font-vocab);
-    font-weight: 500;
-    line-height: 1.2;
-    margin-bottom: 0.6rem;
+.expression a, .reading a, .sentence a {
     color: inherit;
 }
 
-/* MAIN READING – matches .info size/colour */
-.main-reading {
-    font-size: var(--font-read);
-    color: inherit;
-    margin-bottom: 1rem;
+:is(.expression, .reading:not(.pitch)) a:hover {
+    box-shadow: inset 0 -.5em 0 0 var(--accent-primary) !important;
+    /* !important for minimalist anki */
 }
 
-/* OTHER READINGS */
-.other-readings {
-    font-size: var(--font-md);
-    color: var(--secondary);
-    margin-bottom: 1rem;
+.reading.pitch a:hover {
+    box-shadow: inset 0 -.5em 0 0 var(--accent-secondary) !important;
+    /* !important for minimalist anki */
 }
 
-/* FREQUENCY & TYPE CHIPS */
-.frequency,
-.type {
-    font-size: var(--font-sm);
-    color: var(--muted);
+/* ------------------------ INDICATOR ------------------------ */
+
+.indicator {
+    position: absolute;
+
+    bottom: 0.5em;
+    left: -0.46em;
+    height: 0.27em;
+    width: 0.27em;
+
+    border-radius: 50%;
+    display: none;
 }
 
-/* EXPLANATION BLOCK */
-.explanation {
-    font-size: 1rem;
+.visibleIndicator {
+    display: block;
+}
+
+.indicatorNew {
+    background-color: var(--indicator-new);
+}
+
+.indicatorPreview {
+    background-color: var(--indicator-preview);
+}
+
+/* ------------------------ HINT ------------------------ */
+
+.hint {
+    max-width: 30em;
+    line-height: 1.45em;
+}
+
+.hint {
+    --font-variation: 0em;
+
+    --standard-top-margin: 0.2em;
+    --total-margin: 0.4em;
+
+    --top-margin: calc(var(--standard-top-margin) + var(--font-variation));
+    
+    margin-top: var(--top-margin);
+    margin-bottom: calc(var(--total-margin) - var(--top-margin));
+}
+
+.hint:empty {
+    display: none;
+}
+
+/* ------------------------ EXPRESSION HIGHLIGHT ------------------------ */
+
+.hint b {
+    text-decoration-color: var(--accent-primary);
+
+    font-weight: inherit;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-thickness: 0.125em;
+    text-underline-offset: 0.25em;
+}
+
+.container:not(:has(.pitch.reading)) .sentence b {
+    text-decoration-color: var(--accent-primary);
+
+    font-weight: inherit;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-thickness: 0.125em;
+    text-underline-offset: 0.25em;
+}
+
+/* ------------------------ HELPER ------------------------ */
+
+.divider {
+    width: calc(100% - 4em);
+    height: 0.12em;
+    background-color: var(--divider);
+    margin: 0.4em 0;
+    border-radius: 1em;
+}
+
+/* ------------------------ READING ------------------------ */
+
+.reading {
+    margin-top: -0.1em;
+    font-size: 180%;
+    font-weight: 600;
+    color: var(--default-reading);
+}
+
+/* ------------------------ MEANING ------------------------ */
+
+.meaning {
+    max-width: var(--text-max-width);
+    font-size: 130%;
+    line-height: 1.45em;
+    /* font-weight: 500; */
+    color: var(--default-meaning);
+}
+
+.meaning {
+    --font-variation: 0em;
+
+    --standard-top-margin: 0.25em;
+    --total-margin: 0.4em;
+
+    --top-margin: calc(var(--standard-top-margin) + var(--font-variation));
+
+    margin-top: var(--top-margin);
+    margin-bottom: calc(var(--total-margin) - var(--top-margin));
+}
+
+/* ------------------------ NOTES ------------------------ */
+
+.notes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1em;
+}
+
+.notes:empty {
+    display: none;
+}
+
+.noteSimpleSection {
+    margin-top: 0.1em;
+    margin-bottom: 0.3em;
+    color: var(--notes-simple);
+}
+
+.noteDefinitionSection {
+    margin-top: 0.3em;
     text-align: left;
-    margin: 1rem 0;
 }
 
-/* PICTURE GROUP */
-.picture-container {
-    display: inline-block;
-    margin: 1rem 0;
-    padding: 0.5rem;
-    border: 1px solid var(--muted);
-    border-radius: 0.5rem;
+.definitionLine {
+    line-height: 240%;
+    font-weight: 500;
 }
 
-/* IMAGES */
-.picture img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 0;
-    transition: filter 0.3s;
+.definitionExpression {
+    margin-right: 0.06em;
+    font-size: 150%;
+    font-weight: normal;
+    color: var(--notes-definition-expression);
 }
 
-.picture img:hover {
-    filter: brightness(85%);
+.definitionExpression:hover {
+    cursor: pointer;
+    box-shadow: inset 0 -.5em 0 0 var(--accent-secondary) !important;
+    /* !important for minimalist anki */
 }
 
-/* CAPTION */
-.picture-caption {
-    font-size: 1rem;
-    font-style: italic;
-    margin-top: 0.2rem;
-    color: var(--muted);
+.definitionExpression rt {
+    user-select: none;
+    font-size: 55%;
+    color: var(--notes-definition-furigana);
 }
 
-/* AUDIO WRAPPER */
+.definitionReading {
+    font-size: 120%;
+    color: var(--notes-definition-reading);
+}
+
+.definitionMeaning {
+    color: var(--notes-definition-meaning);
+}
+
+.definitionMeaning a {
+    color: inherit;
+}
+
+.definitionMeaning a:hover {
+    box-shadow: inset 0 -.5em 0 0 var(--accent-secondary) !important;
+    /* !important for minimalist anki */
+}
+
+/* ------------------------ IMAGE ------------------------ */
+
+.image img {
+    min-height: 6em;
+    max-width: min(27em, 70vw);
+    max-height: min(16em, 100vh - 17em);
+    border-radius: 0.3em;
+    /* border: 0.08em solid black; */
+
+    /* WHEN font-size: 20px; */
+    /* max-width: min(33em, 70vw);
+    max-height: min(18.5em, 100vh - 17em); */
+}
+
+.image:empty {
+    /* we become a grey line if no image :D */
+    background-color: var(--divider);
+    width: 20em;
+    height: 0.2em;
+    border-radius: 1em;
+}
+
+.image:hover {
+    cursor: pointer;
+}
+
+/* ------------------------ SENTENCE ------------------------ */
+
+.sentence {
+    max-width: var(--text-max-width);
+    font-size: 120%;
+    line-height: 1.45em;
+}
+
+.sentence {
+    --font-variation: 0em;
+
+    --standard-top-margin: 0.3em;
+    --total-margin: 0.6em;
+
+    --top-margin: calc(var(--standard-top-margin) + var(--font-variation));
+    
+    margin-top: var(--top-margin);
+    margin-bottom: calc(var(--total-margin) - var(--top-margin));
+}
+
 .audio {
-    margin: 1rem 0;
+    display: none;
+    /* flex */
+    justify-content: center;
+}
+
+/* ------------------------ ERROR ------------------------ */
+
+.sentence:not(:has(b)),
+.hint:not(:has(b)) {
+    color: var(--error-field) !important;
+}
+
+.errorField,
+.errorField * {
+    color: var(--error-field) !important;
+}
+
+.superError,
+.superError * {
+    color: var(--error-super) !important;
+}
+
+/* ------------------------ PITCH ------------------------ */
+
+.pitch {
+    display: inline;
+}
+
+/* #pitch-tags {
+    color: var(--canvas);
+    font-family: var(--font-serif);
+    background-color: var(--fg);
+    display: none;
+    vertical-align: top;
+    padding: 1px 3px;
+    margin-right: -5px;
+}
+
+.mobile .nightMode #pitch-tags {
+    color: #000 !important;
+    background-color: #fff;
+} */
+
+/* Multiple pitches */
+
+.pitch ul,
+#pitch-tags ul {
+    list-style: none;
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+.pitch li,
+#pitch-tags li {
+    display: inline;
+}
+
+.pitch ul>li:not(:last-child)::after,
+#pitch-tags ul>li:not(:last-child)::after {
+    content: "・";
+}
+
+.pitch ul>li:not(:last-child)::after {
+    color: var(--foreground);
+}
+
+/* #pitch-tags ul>li:not(:last-child)::after {
+    color: var(--bg-color);
+} */
+
+/* Pitch graphs */
+
+.pitch-low {
+    position: relative;
+}
+
+.pitch-high {
+    position: relative;
+}
+
+:root {
+    /* thin line */
+    /* --pitch-line-width: 0.1em;
+    --pitch-top-margin: 0.08em;
+    --pitch-drop-height: 0.4em;
+    --pitch-drop-margin: 0.1em;
+    --pitch-drop-padding: 0.1em;
+    --pitch-right: 0.1em; */
+
+    /* thick line */
+    --pitch-line-width: 0.14em;
+    --pitch-top-margin: 0;
+    --pitch-drop-height: 0.46em;
+    --pitch-drop-margin: 0.14em;
+    --pitch-drop-padding: 0.14em;
+    --pitch-right: 0.14em;
+}
+
+.pitch-high>.pitch-line {
+    display: block;
+    position: absolute;
+    top: var(--pitch-top-margin);
+    left: 0;
+    right: 0;
+    height: 0;
+    border-top-width: var(--pitch-line-width);
+    border-top-style: solid;
+}
+
+/* .mobile .pitch-high>.pitch-line {
+    top: -0.1em;
+} */
+
+.pitch-to-drop {
+    position: relative;
+    padding-right: var(--pitch-drop-padding);
+    margin-right: var(--pitch-drop-margin);
+}
+
+.pitch-to-drop>.pitch-line {
+    display: block;
+    position: absolute;
+    top: var(--pitch-top-margin);
+    left: 0;
+    right: 0;
+    border-top-width: var(--pitch-line-width);
+    border-top-style: solid;
+    right: calc(-1 * var(--pitch-right));
+    height: var(--pitch-drop-height);
+    border-right-width: var(--pitch-line-width);
+    border-right-style: solid;
+}
+
+/* .mobile .pitch-to-drop>.pitch-line {
+    top: -0.1em;
+} */
+
+/* Pitch colors */
+
+.heiban {
+    color: var(--heiban);
+}
+
+.atamadaka {
+    color: var(--atamadaka);
+}
+
+.nakadaka {
+    color: var(--nakadaka);
+}
+
+.odaka {
+    color: var(--odaka);
+}
+
+.kifuku {
+    color: var(--kifuku);
+}
+
+/* Pitch-meaning harmony */
+
+.container:has(.pitch-item.heiban:first-child) .meaning {
+    color: var(--heiban-foreground);
+}
+
+.container:has(.pitch-item.atamadaka:first-child) .meaning {
+    color: var(--atamadaka-foreground);
+}
+
+.container:has(.pitch-item.nakadaka:first-child) .meaning {
+    color: var(--nakadaka-foreground);
+}
+
+.container:has(.pitch-item.odaka:first-child) .meaning {
+    color: var(--odaka-foreground);
+}
+
+.container:has(.pitch-item.kifuku:first-child) .meaning {
+    color: var(--kifuku-foreground);
+}
+
+/* Pitch-sentence harmony */
+
+.container:has(.pitch.reading) .sentence b {
+    font-weight: inherit;
+    
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-thickness: 0.125em;
+    text-underline-offset: 0.25em;
+}
+
+.container:has(.pitch-item.heiban:first-child) .sentence b {
+    color: var(--heiban);
+}
+
+.container:has(.pitch-item.atamadaka:first-child) .sentence b {
+    color: var(--atamadaka);
+}
+
+.container:has(.pitch-item.nakadaka:first-child) .sentence b {
+    color: var(--nakadaka);
+}
+
+.container:has(.pitch-item.odaka:first-child) .sentence b {
+    color: var(--odaka);
+}
+
+.container:has(.pitch-item.kifuku:first-child) .sentence b {
+    color: var(--kifuku);
+}
+
+/* ------------------------ BLUR ------------------------ */
+
+.container:not(:has(.image:hover, .blurry:hover)) .blurry {
+    filter: blur(var(--blur-amount));
+}
+
+.container:not(:has(.image:hover, .blurry:hover)) .blurry:hover {
+    filter: unset;
+}
+
+/* ------------------------ FONTS ------------------------ */
+
+@font-face {
+    font-family: 'ACKaisyoRiver';
+    src: local('ackaisyo');
+    ascent-override: 93%;
+    descent-override: 6%;
+    line-gap-override: 45%;
+}
+
+.font-notosans {
+    font-family: 'Noto Sans JP', sans-serif;
+}
+
+.font-ackaisyo {
+    font-family: 'ACKaisyoRiver', sans-serif;
+}
+
+.font-hiraginosans {
+    font-family: 'Hiragino Sans', sans-serif;
+}
+
+.font-hiraginomincho {
+    font-family: 'Hiragino Mincho ProN', serif;
+}
+
+.font-hiraginominchobold {
+    font-family: 'Hiragino Mincho ProN', serif;
+    font-weight: 600;
+}
+
+.font-yumincho {
+    font-family: 'YuMincho', serif;
+    font-weight: 600;
+}
+
+/* .font-banana {
+    font-family: 'ArmedBanana', sans-serif;
+} */
+
+/* --- FONT NORMALIZING --- */
+
+/* -- HIRAGINO -- */
+
+.definitionExpression:is(.font-hiraginosans, .font-hiraginomincho, .font-hiraginominchobold) {
+    line-height: 175%;
+}
+
+.definitionMeaning.japanese:is(.font-hiraginosans, .font-hiraginomincho, .font-hiraginominchobold) {
+    line-height: 100%;
+}
+
+:is(.hint, .meaning, .sentence):is(.font-hiraginosans, .font-hiraginomincho, .font-hiraginominchobold) {
+    --font-variation: 0.08em;
+}
+
+/* -- ACKAISYO -- */
+
+:is(.hint, .meaning, .sentence).font-ackaisyo {
+    --font-variation: -0.03em;
+}
+
+/* -- YUMINCHO -- */
+
+:is(.hint, .meaning, .sentence).font-yumincho {
+    --font-variation: 0.08em;
+}
+
+/* ------------------------ HIDDEN MENU ------------------------ */
+
+.hiddenMenu {
+    --item-width: 2;
+    --item-height: 4;
+
+    --item-size: 2.2em;
+    --item-radius: 0.4em;
+    --gap: 0.3em;
+    --inner-padding: 1.2em;
+    --outer-padding: 1em;
+
+    position: fixed;
+    top: 0;
+    right: 0;
+
+    --padding-total: calc(var(--inner-padding) + var(--outer-padding));
+    --item-width-total: var(--item-size) * var(--item-width) + var(--gap) * (var(--item-width) - 1);
+    --item-height-total: var(--item-size) * var(--item-height) + var(--gap) * (var(--item-height) - 1);
+
+    padding: var(--outer-padding) var(--outer-padding) var(--inner-padding) var(--inner-padding);
+
+    width: calc(var(--padding-total) + var(--item-width-total));
+    height: calc(var(--padding-total) + var(--item-height-total));
+
+    border-bottom-left-radius: 2em;
+    overflow: clip;
+
+    display: flex;
+    flex-direction: row-reverse;
+
+    background-color: var(--background-secondary);
+    opacity: 0;
+}
+
+.hiddenMenu:hover {
+    opacity: 1;
+}
+
+.linkContainer {
+    /* width: auto;
+    height: 8em; */
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap-reverse;
+    align-content: flex-start;
+    gap: var(--gap);
+
+    /* background-color: rgba(255, 82, 82, 0.3); */
+}
+
+.linkContainer a {
+    width: var(--item-size);
+    height: var(--item-size);
+    border-radius: var(--item-radius);
+    opacity: 0.5;
+}
+
+.linkContainer a:hover {
+    opacity: 1;
+}
+
+.immersionkitLink {
+    order: 0;
+    background-color: yellow;
+}
+
+.jpdbLink {
+    order: 1;
+    background-color: teal;
+}
+
+.massifLink {
+    order: 2;
+    background-color: #ec464f;
+}
+
+.wikipediaLink {
+    order: 3;
+    background-color: #ffffff;
+}
+
+.weblioLink {
+    order: 4;
+    background-color: royalblue;
+}
+
+.ojadLink {
+    order: 5;
+    background-color: orange;
+}
+
+.youglishLink {
+    order: 6;
+    background-color: #af85f4;
+}
+
+.cycleFontButton {
+    order: 7;
+    background-color: #6cbf43;
+    cursor: pointer;
+}
+
+/* ------------------------ INFORMATION ------------------------ */
+
+.container:not(:has(.hiddenMenu:hover)) .informationContainer {
+    /* hide if not hovering hidden menu */
+    display: none;
+}
+
+.informationContainer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+
+    padding-top: 0.2em;
+    padding-bottom: 0.3em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+
+    border-top-left-radius: 0.4em;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    background-color: var(--background-secondary);
+}
+
+.informationContainer div {
+    color: var(--information);
+    font-size: 72%;
+}
+
+.informationContainer .event-bloodmoon {
+    color: rgba(235, 57, 45, 0.7);
+}
+
+.informationContainer .event-holiday {
+    color: rgba(100, 148, 237, 0.8); /* cornflowerblue */
 }
