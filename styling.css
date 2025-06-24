@@ -259,6 +259,18 @@
     color: var(--default-reading);
 }
 
+.readingLocation {
+    color: var(--location);
+}
+
+.readingFamily {
+    color: var(--family);
+}
+
+.readingPerson {
+    color: var(--person);
+}
+
 /* ------------------------ MEANING ------------------------ */
 
 .meaning {

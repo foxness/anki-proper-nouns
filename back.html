@@ -309,31 +309,40 @@
 
     function populateReading() {
         let readingElement = document.querySelector('.reading')
-        if (readingElement.childNodes.length > 0) {
-            return
+        let elementClass = ''
+
+        if (cardMainReadingType === 'loc') {
+            elementClass = 'readingLocation'
+        } else if (cardMainReadingType === 'fam') {
+            elementClass = 'readingFamily'
+        } else if (cardMainReadingType === 'per') {
+            elementClass = 'readingPerson'
+        } else {
+            elementClass = 'readingLocation'
+            alert('unknown Main_Reading_Type')
         }
 
-        readingElement.innerHTML = cardExpression
+        readingElement.classList.add(elementClass)
     }
 
     function populateBar() {
         let barElement = document.querySelector('.bar')
 
         let innerElement = document.createElement('div')
-        let barClass = ''
+        let elementClass = ''
 
         if (cardMainReadingType === 'loc') {
-            barClass = 'barLocation'
+            elementClass = 'barLocation'
         } else if (cardMainReadingType === 'fam') {
-            barClass = 'barFamily'
+            elementClass = 'barFamily'
         } else if (cardMainReadingType === 'per') {
-            barClass = 'barPerson'
+            elementClass = 'barPerson'
         } else {
-            barClass = 'barLocation'
+            elementClass = 'barLocation'
             alert('unknown Main_Reading_Type')
         }
 
-        innerElement.classList.add(barClass)
+        innerElement.classList.add(elementClass)
         barElement.replaceChildren(innerElement)
     }
 
@@ -1208,7 +1217,7 @@
         addLinkToExpression()
         fixCopypaste()
 
-        // populateReading()
+        populateReading()
         populateBar()
         varyReadingKana()
         // addPitchToReading()
