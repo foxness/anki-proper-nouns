@@ -367,11 +367,6 @@
 
 /* ------------------------ ERROR ------------------------ */
 
-.sentence:not(:has(b)),
-.hint:not(:has(b)) {
-    color: var(--error-field) !important;
-}
-
 .errorField,
 .errorField * {
     color: var(--error-field) !important;
