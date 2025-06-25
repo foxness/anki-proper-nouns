@@ -391,18 +391,18 @@
     font-size: 80%;
     /* line-height: 1.45em; */
     text-align: left;
+    font-family: "Hiragino Sans", sans-serif;
+    color: hsl(0, 0%, 80%)
 }
 
 .sentence {
-    --font-variation: 0em;
+    margin-top: 0.8em;
+    margin-bottom: 0.8em;
+}
 
-    --standard-top-margin: 0.3em;
-    --total-margin: 0.6em;
-
-    --top-margin: calc(var(--standard-top-margin) + var(--font-variation));
-    
-    margin-top: var(--top-margin);
-    margin-bottom: calc(var(--total-margin) - var(--top-margin));
+.sentence > p {
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
 }
 
 .audio {
