@@ -59,7 +59,7 @@
         riverBlurMinInterval = 0 // days
         riverBlurMaxInterval = 50
         riverBlurMinBlur = 0 // em
-        riverBlurMaxBlur = 0.12 // 0.1 = readable, 0.14 = barely readable, 0.2 = unreadable
+        riverBlurMaxBlur = 0 // 0.1 = readable, 0.14 = barely readable, 0.2 = unreadable
 
         // --- READING KANA ---
 
@@ -91,7 +91,7 @@
         // cannot be null
         // can be [], means use regular font
         riverDayFontProbabilities = [
-            ['hiraginosans', 0.5],
+            ['hiraginosans', 0],
             ['hiraginomincho', 0], // 0.02
             ['hiraginominchobold', 0], // 0.005
             ['yumincho', 0], // 0.005
@@ -100,15 +100,14 @@
 
         // cannot be null
         // can be [], means use day font
-        riverSpecificCardFontProbabilities = []
-        // riverSpecificCardFontProbabilities = [
-        //     ['notosans', 0.05],
-        //     ['hiraginosans', 0.05],
-        //     ['hiraginomincho', 0.02], // 1 in 50
-        //     ['hiraginominchobold', 0.005], // 1 in 200
-        //     ['yumincho', 0.005], // 1 in 200
-        //     ['ackaisyo', 0.005] // 1 in 200
-        // ]
+        riverSpecificCardFontProbabilities = [
+            ['notosans', 0.25],
+            ['hiraginosans', 0.25],
+            ['hiraginomincho', 0.5],
+            ['hiraginominchobold', 0],
+            ['yumincho', 0],
+            ['ackaisyo', 0]
+        ]
 
         // cannot be null
         // can be [], means use day or specific font
@@ -189,6 +188,7 @@
         cardTrueReading = `{{Main_Reading}}`
         cardMeaning = `{{Other_Readings}}`
         cardTrueSentence = `{{Explanation}}`
+        cardMainReadingType = `{{Main_Reading_Type}}`
         cardPitchPosition = `0`
 
         // additional anki fields addon
@@ -292,11 +292,41 @@
 
     function populateReading() {
         let readingElement = document.querySelector('.reading')
-        if (readingElement.childNodes.length > 0) {
-            return
+        let elementClass = ''
+
+        if (cardMainReadingType === 'loc') {
+            elementClass = 'readingLocation'
+        } else if (cardMainReadingType === 'fam') {
+            elementClass = 'readingFamily'
+        } else if (cardMainReadingType === 'per') {
+            elementClass = 'readingPerson'
+        } else {
+            elementClass = 'readingLocation'
+            alert('unknown Main_Reading_Type')
         }
 
-        readingElement.innerHTML = cardExpression
+        readingElement.classList.add(elementClass)
+    }
+
+    function populateBar() {
+        let barElement = document.querySelector('.bar')
+
+        let innerElement = document.createElement('div')
+        let elementClass = ''
+
+        if (cardMainReadingType === 'loc') {
+            elementClass = 'barLocation'
+        } else if (cardMainReadingType === 'fam') {
+            elementClass = 'barFamily'
+        } else if (cardMainReadingType === 'per') {
+            elementClass = 'barPerson'
+        } else {
+            elementClass = 'barLocation'
+            alert('unknown Main_Reading_Type')
+        }
+
+        innerElement.classList.add(elementClass)
+        barElement.replaceChildren(innerElement)
     }
 
     function varyReadingKana() {
@@ -778,7 +808,7 @@
     }
 
     function varyCardJapaneseFont() {
-        let japaneseElementSelector = '.expression, .hint, .sentenceInner, .definitionExpression, .definitionReading, .japanese'
+        let japaneseElementSelector = '.expression, .hint, .definitionExpression, .definitionReading, .japanese'
         let elements = document.querySelectorAll(japaneseElementSelector)
 
         setFont(elements, riverDefaultFont)
@@ -1151,6 +1181,7 @@
         fixCopypaste()
 
         // populateReading()
+        // populateBar()
         // varyReadingKana()
         // addPitchToReading()
         // addLinkToReading()
@@ -1169,9 +1200,10 @@
         addLinkToExpression()
         fixCopypaste()
 
-        // populateReading()
+        populateReading()
+        populateBar()
         varyReadingKana()
-        addPitchToReading()
+        // addPitchToReading()
         addLinkToReading()
         addLinkToImage()
 

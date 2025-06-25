@@ -75,7 +75,7 @@
         riverBlurMinInterval = 0 // days
         riverBlurMaxInterval = 50
         riverBlurMinBlur = 0 // em
-        riverBlurMaxBlur = 0.12 // 0.1 = readable, 0.14 = barely readable, 0.2 = unreadable
+        riverBlurMaxBlur = 0 // 0.1 = readable, 0.14 = barely readable, 0.2 = unreadable
 
         // --- READING KANA ---
 
@@ -107,7 +107,7 @@
         // cannot be null
         // can be [], means use regular font
         riverDayFontProbabilities = [
-            ['hiraginosans', 0.5],
+            ['hiraginosans', 0],
             ['hiraginomincho', 0], // 0.02
             ['hiraginominchobold', 0], // 0.005
             ['yumincho', 0], // 0.005
@@ -116,15 +116,14 @@
 
         // cannot be null
         // can be [], means use day font
-        riverSpecificCardFontProbabilities = []
-        // riverSpecificCardFontProbabilities = [
-        //     ['notosans', 0.05],
-        //     ['hiraginosans', 0.05],
-        //     ['hiraginomincho', 0.02], // 1 in 50
-        //     ['hiraginominchobold', 0.005], // 1 in 200
-        //     ['yumincho', 0.005], // 1 in 200
-        //     ['ackaisyo', 0.005] // 1 in 200
-        // ]
+        riverSpecificCardFontProbabilities = [
+            ['notosans', 0.25],
+            ['hiraginosans', 0.25],
+            ['hiraginomincho', 0.5],
+            ['hiraginominchobold', 0],
+            ['yumincho', 0],
+            ['ackaisyo', 0]
+        ]
 
         // cannot be null
         // can be [], means use day or specific font
@@ -825,7 +824,7 @@
     }
 
     function varyCardJapaneseFont() {
-        let japaneseElementSelector = '.expression, .hint, .sentenceInner, .definitionExpression, .definitionReading, .japanese'
+        let japaneseElementSelector = '.expression, .hint, .definitionExpression, .definitionReading, .japanese'
         let elements = document.querySelectorAll(japaneseElementSelector)
 
         setFont(elements, riverDefaultFont)
