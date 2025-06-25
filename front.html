@@ -101,9 +101,9 @@
         // cannot be null
         // can be [], means use day font
         riverSpecificCardFontProbabilities = [
-            ['notosans', 0.25],
-            ['hiraginosans', 0.25],
-            ['hiraginomincho', 0.5],
+            ['notosans', 1/6],
+            ['hiraginosans', 1/6],
+            ['hiraginomincho', 4/6],
             ['hiraginominchobold', 0],
             ['yumincho', 0],
             ['ackaisyo', 0]
@@ -1190,7 +1190,7 @@
         // populateSentence()
         populateHint()
 
-        // highlightNotes()
+        highlightNotes()
         // blurEnglishText()
         varyJapaneseFont()
     }

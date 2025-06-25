@@ -32,9 +32,11 @@
     <div class='reading'>{{Main_Reading}}</div>
     <div class='meaning'>{{Other_Readings}}</div>
     <div class='notes'>
-        {{Main_Reading_Frequency}} {{Main_Reading_Type}}<br>
-        {{Other_Readings}} {{Other_Readings_Frequency}} {{Other_Readings_Types}}
-        </div>
+        {{Main_Reading_Frequency}}
+        {{Main_Reading_Type}}
+        {{Other_Readings_Frequency}}
+        {{Other_Readings_Types}}
+    </div>
     <div class='image'>{{Image}}</div>
     <div class='sentence sentenceInner'>{{Explanation}}</div>
 
@@ -117,9 +119,9 @@
         // cannot be null
         // can be [], means use day font
         riverSpecificCardFontProbabilities = [
-            ['notosans', 0.25],
-            ['hiraginosans', 0.25],
-            ['hiraginomincho', 0.5],
+            ['notosans', 1/6],
+            ['hiraginosans', 1/6],
+            ['hiraginomincho', 4/6],
             ['hiraginominchobold', 0],
             ['yumincho', 0],
             ['ackaisyo', 0]
