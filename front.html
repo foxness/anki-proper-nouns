@@ -356,15 +356,6 @@
         })
     }
 
-    function populateSentence() {
-        let sentenceInnerElement = document.querySelector('.sentenceInner')
-        if (sentenceInnerElement.childNodes.length > 0) {
-            return
-        }
-
-        sentenceInnerElement.innerHTML = cardExpression
-    }
-
     function populateHint() {
         let removeHintSymbol = '-'
         let copySentenceSymbol = 'c'
@@ -1005,7 +996,6 @@
         // addLinkToReading()
         // addLinkToImage()
 
-        // populateSentence()
         populateHint()
 
         // highlightNotes()
@@ -1024,7 +1014,6 @@
         addLinkToReading()
         addLinkToImage()
 
-        populateSentence()
         populateHint()
 
         highlightNotes()
