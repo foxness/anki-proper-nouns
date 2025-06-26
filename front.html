@@ -51,15 +51,7 @@
 
         // --- KEYBINDS ---
 
-        riverToggleBlurKey = 'h'
         riverCycleFontKey = 'j'
-
-        // --- ENGLISH TEXT BLUR ---
-
-        riverBlurMinInterval = 0 // days
-        riverBlurMaxInterval = 50
-        riverBlurMinBlur = 0 // em
-        riverBlurMaxBlur = 0 // 0.1 = readable, 0.14 = barely readable, 0.2 = unreadable
 
         // --- READING KANA ---
 
@@ -422,29 +414,6 @@
         }
     }
 
-    function blurEnglishText() {
-        let englishElements = document.querySelectorAll('.meaning, .definitionMeaning, .noteSimpleSection')
-        englishElements = Array.from(englishElements).filter(element => !getIsJapanese(element.textContent))
-
-        setBlurAmount()
-
-        let toggleBlur = () => {
-            englishElements.forEach(element => {
-                element.classList.toggle('blurry')
-            })
-        }
-
-        if (cardIsReview) {
-            toggleBlur()
-        }
-
-        addEventListener('keypress', (e) => {
-            if (e.key === riverToggleBlurKey) {
-                toggleBlur()
-            }
-        })
-    }
-
     function varyJapaneseFont() {
         tagJapaneseText()
         varyCardJapaneseFont()
@@ -500,31 +469,6 @@
 
     function getIsKanaCard() {
         return /^[\u3040-\u30ff]+$/.test(cardExpression)
-    }
-
-    function lerp(value, minIn, maxIn, minOut, maxOut) {
-        let enableEase = true
-        let ease = (x) => 0.5 - 0.5 * Math.cos(Math.PI * x)
-
-        let scale = Math.min(1, Math.max(0, (value - minIn) / (maxIn - minIn)))
-        if (enableEase) {
-            scale = ease(scale)
-        }
-        
-        return minOut + scale * (maxOut - minOut)
-    }
-
-    function setBlurAmount() {
-        let blurAmount = lerp(
-            cardInterval,
-            riverBlurMinInterval,
-            riverBlurMaxInterval,
-            riverBlurMinBlur,
-            riverBlurMaxBlur
-        )
-
-        let root = document.documentElement
-        root.style.setProperty('--blur-amount', `${blurAmount}em`)
     }
 
     function getIsFrontOfCard() {
@@ -999,7 +943,6 @@
         populateHint()
 
         // highlightNotes()
-        // blurEnglishText()
         varyJapaneseFont()
     }
 
@@ -1017,7 +960,6 @@
         populateHint()
 
         highlightNotes()
-        blurEnglishText()
         varyJapaneseFont()
     }
 

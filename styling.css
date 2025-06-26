@@ -6,7 +6,6 @@
     /* --- GENERAL --- */
 
     --text-max-width: 36em;
-    --blur-amount: 0.3em;
 
     /* --- GENERAL COLORS --- */
 
@@ -407,16 +406,6 @@
 .superError,
 .superError * {
     color: var(--error-super) !important;
-}
-
-/* ------------------------ BLUR ------------------------ */
-
-.container:not(:has(.image:hover, .blurry:hover)) .blurry {
-    filter: blur(var(--blur-amount));
-}
-
-.container:not(:has(.image:hover, .blurry:hover)) .blurry:hover {
-    filter: unset;
 }
 
 /* ------------------------ FONTS ------------------------ */
