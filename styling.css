@@ -296,53 +296,6 @@
     color: var(--notes-simple);
 }
 
-.noteDefinitionSection {
-    margin-top: 0.3em;
-    text-align: left;
-}
-
-.definitionLine {
-    line-height: 240%;
-    font-weight: 500;
-}
-
-.definitionExpression {
-    margin-right: 0.06em;
-    font-size: 150%;
-    font-weight: normal;
-    color: var(--notes-definition-expression);
-}
-
-.definitionExpression:hover {
-    cursor: pointer;
-    box-shadow: inset 0 -.5em 0 0 var(--accent-secondary) !important;
-    /* !important for minimalist anki */
-}
-
-.definitionExpression rt {
-    user-select: none;
-    font-size: 55%;
-    color: var(--notes-definition-furigana);
-}
-
-.definitionReading {
-    font-size: 120%;
-    color: var(--notes-definition-reading);
-}
-
-.definitionMeaning {
-    color: var(--notes-definition-meaning);
-}
-
-.definitionMeaning a {
-    color: inherit;
-}
-
-.definitionMeaning a:hover {
-    box-shadow: inset 0 -.5em 0 0 var(--accent-secondary) !important;
-    /* !important for minimalist anki */
-}
-
 /* ------------------------ IMAGE ------------------------ */
 
 .image img {

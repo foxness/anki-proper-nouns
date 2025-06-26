@@ -284,10 +284,9 @@
     }
 
     function addLinkToExpression() {
-        let useFurigana = false
         let expressionElement = document.querySelector('.expression')
 
-        let rawExpression = useFurigana ? makeFuriganaExpression(cardExpression, cardReading).outerHTML : null
+        let rawExpression = null
         let linkElement = makeDictionaryLinkElement(cardExpression, rawExpression)
 
         expressionElement.replaceChildren(linkElement)
@@ -794,150 +793,14 @@
 
     // ---------------- NOTE DEFINITION HIGHLIGHTING ----------------
 
-    function splitIntoKanaGroups(expression) {
-        let groups = []
-        let chars = [...expression]
-        let previousIsKana
-
-        for (let i = 0; i < chars.length; i++) {
-            let char = chars[i]
-            let isKana = getIsKana(char)
-
-            if (i === 0) {
-                previousIsKana = isKana
-                groups.push(char)
-                continue
-            }
-
-            if (previousIsKana === isKana) {
-                groups[groups.length - 1] = groups.at(-1) + char
-            } else {
-                groups.push(char)
-            }
-
-            previousIsKana = isKana
-        }
-
-        return groups
-    }
-
-    function recognizeReading(kanaGroups, expression, reading) {
-        let rawRegex = kanaGroups.map(g => getIsKana(g) ? g : '(.+)').join('')
-        let furiganaRegex = new RegExp(rawRegex)
-
-        let recognized = furiganaRegex.exec(reading)
-        if (recognized === null) {
-            return [[expression, reading]]
-        }
-
-        let recognizedReadings = recognized.slice(1)
-        return kanaGroups.map(g => getIsKana(g) ? [g] : [g, recognizedReadings.shift()])
-    }
-
-    function formatRuby(groups) {
-        let rubyElement = document.createElement('ruby')
-
-        groups.forEach(group => {
-            let element = group[0]
-            let reading = group[1] ?? ''
-            let switchedReading = translateKana(reading, riverIsHiraganaReading)
-
-            let rtElement = document.createElement('rt')
-            rtElement.appendChild(document.createTextNode(switchedReading))
-
-            rubyElement.appendChild(document.createTextNode(element))
-            rubyElement.appendChild(rtElement)
-        })
-
-        return rubyElement
-    }
-
-    function makeFuriganaExpression(expression, reading) {
-        if (reading === expression || reading === '') {
-            return document.createTextNode(expression)
-        }
-
-        let kanaGroups = splitIntoKanaGroups(expression)
-        let recognizedGroups = recognizeReading(kanaGroups, expression, reading)
-
-        return formatRuby(recognizedGroups)
-    }
-
-    function highlightNoteDefinition(expression, reading, meaning, line) {
-        let useFurigana = true
-
-        let lineElement = document.createElement('span')
-        lineElement.classList.add('definitionLine')
-
-        let expressionElement = document.createElement('span')
-        expressionElement.classList.add('definitionExpression')
-
-        if (useFurigana) {
-            let expressionWithFurigana = makeFuriganaExpression(expression, reading)
-            expressionElement.appendChild(expressionWithFurigana)
-            lineElement.appendChild(expressionElement)
-
-            lineElement.appendChild(document.createTextNode(' — '))
-        } else {
-            expressionElement.innerHTML = expression
-            lineElement.appendChild(expressionElement)
-
-            let readingElement = document.createElement('span')
-            readingElement.classList.add('definitionReading')
-            readingElement.appendChild(document.createTextNode(reading))
-
-            lineElement.appendChild(document.createTextNode('「'))
-            lineElement.appendChild(readingElement)
-            lineElement.appendChild(document.createTextNode('」— '))
-        }
-
-        expressionElement.addEventListener('click', (e) => {
-            ankiSearch(line)
-        })
-
-        let meaningElement = document.createElement('span')
-        meaningElement.classList.add('definitionMeaning')
-        let linkElement = makeDictionaryLinkElement(expression, meaning)
-        meaningElement.appendChild(linkElement)
-
-        lineElement.appendChild(meaningElement)
-        return lineElement
-    }
-
     function getNoteGroups(noteElement) {
-        let removeMainDefinitionNote = true
-
         let noteRaw = noteElement.innerHTML.replaceAll('&nbsp;', ' ').trim()
         let lines = noteRaw.split('<br>')
 
         let simpleLines = []
         let definitionElements = []
 
-        lines.forEach(line => {
-            // definition examples:
-            // 持ち上げる [もちあげる] - elevate
-            // 収まる [おさまる] - fit
-
-            let definitionRegex = /^(.+?)\s*[「\[](.+)[」\]]\s*[-ー—]\s*(.+)$/
-
-            let groups = definitionRegex.exec(line)
-            if (groups === null) {
-                simpleLines.push(line)
-                return
-            }
-
-            let expression = groups[1].trim()
-            let reading = groups[2].trim()
-            let meaning = groups[3].trim()
-
-            let isMainDefinition = expression == cardExpression && reading == cardReading
-            if (removeMainDefinitionNote && isMainDefinition) {
-                return
-            }
-
-            let highlightedDefinition = highlightNoteDefinition(expression, reading, meaning, line)
-            definitionElements.push(highlightedDefinition)
-        })
+        simpleLines = lines
 
         return {
             simpleLines: simpleLines,
