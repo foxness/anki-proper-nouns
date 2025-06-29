@@ -93,7 +93,7 @@
             'ackaisyo'
         ]
 
-        riverFontRegular = 'notosans'
+        riverFontRegular = 'hiraginomincho'
         riverFontOverride = null
         riverSpecificFontAllowedOnNew = true
 
@@ -112,9 +112,9 @@
         // cannot be null
         // can be [], means use day font
         riverSpecificCardFontProbabilities = [
-            ['notosans', 1/6],
-            ['hiraginosans', 1/6],
-            ['hiraginomincho', 4/6],
+            ['notosans', 0],
+            ['hiraginosans', 0],
+            ['hiraginomincho', 0],
             ['hiraginominchobold', 0],
             ['yumincho', 0],
             ['ackaisyo', 0]
@@ -378,16 +378,6 @@
             hintElement.innerHTML = cardSentence
             return
         }
-
-        // if (hintElement.childNodes.length > 0) {
-        //     return
-        // }
-
-        // if (!riverIsKanaCard || riverIsKatakanaCard) {
-        //     return
-        // }
-
-        // hintElement.innerHTML = cardSentence
     }
 
     function highlightNotes() {
@@ -742,7 +732,7 @@
     }
 
     function varyCardJapaneseFont() {
-        let japaneseElementSelector = '.expression, .hint, .definitionExpression, .definitionReading, .japanese'
+        let japaneseElementSelector = '.expression, .hint, .japanese'
         let elements = document.querySelectorAll(japaneseElementSelector)
 
         setFont(elements, riverDefaultFont)
