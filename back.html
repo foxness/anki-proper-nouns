@@ -357,6 +357,35 @@
         barElement.replaceChildren(innerElement)
     }
 
+    function populateBarComplex() {
+        let barElement = document.querySelector('.bar')
+
+        let barParts = getBarParts(cardReadings)
+        // alert(JSON.stringify(barParts))
+
+        for (const [type, frequency] of Object.entries(barParts)) {
+            let partElement = document.createElement('div')
+            let elementClass = ''
+
+            switch (type) {
+            case CardType.Location:
+                elementClass = 'barLocation'
+                break;
+            case CardType.Family:
+                elementClass = 'barFamily'
+                break;
+            case CardType.Person:
+                elementClass = 'barPerson'
+                break;
+            }
+
+            partElement.classList.add(elementClass)
+            partElement.style.flex = frequency
+
+            barElement.appendChild(partElement)
+        }
+    }
+
     function varyReadingKana() {
         let readingElement = document.querySelector('.reading')
         readingElement.innerHTML = riverVariedKanaReading
@@ -859,6 +888,20 @@
         return readings
     }
 
+    function getBarParts(readings) {
+        let parts = {}
+        let types = new Set(readings.map(a => a.type))
+
+        types.forEach(type => {
+            let frequencies = readings.filter(a => a.type === type).map(a => a.frequency)
+            let frequencySum = frequencies.reduce((a, b) => a + b, 0)
+
+            parts[type] = frequencySum
+        })
+
+        return parts
+    }
+
     // ---------------- NOTE DEFINITION HIGHLIGHTING ----------------
 
     function getNoteGroups(noteElement) {
@@ -885,6 +928,7 @@
 
         // populateReading()
         // populateBar()
+        // populateBarComplex()
         // varyReadingKana()
         // addLinkToReading()
         // addLinkToImage()
@@ -901,7 +945,8 @@
         fixCopypaste()
 
         populateReading()
-        populateBar()
+        // populateBar()
+        populateBarComplex()
         varyReadingKana()
         addLinkToReading()
         addLinkToImage()

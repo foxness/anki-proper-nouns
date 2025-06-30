@@ -208,19 +208,11 @@
     /* color: var(--default-reading); */
 
     display: flex;
-    /* flex-direction: column; */
+    /* flex-direction: row; */
     /* align-items: center; */
-}
 
-.bar > div {
-    /* margin-top: -0.1em;
-    font-size: 180%;
-    font-weight: 600;
-    color: var(--default-reading); */
-    height: 0.4rem;
     width: 16em;
-
-    /* background-color: blue; */
+    height: 0.4rem;
 }
 
 .barLocation {
