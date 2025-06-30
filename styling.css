@@ -43,9 +43,9 @@
 
     /* --- TYPE COLORS --- */
 
-    --location: teal;
-    --family: slateblue;
-    --person: orangered;
+    --location: #009595;
+    --family: #5e4aff;
+    --person: #ff4500;
 }
 
 /* ------------------------ MAIN ------------------------ */
@@ -271,7 +271,7 @@
 }
 
 .otherReadings > span:not(:last-child) {
-    margin-right: 0.5em;
+    margin-right: 0.6em;
 }
 
 /* ------------------------ TYPES ------------------------ */
