@@ -11,7 +11,7 @@
 
     --foreground: #fcfcfc;
     --default-reading: #f8e1b5;
-    --default-meaning: #bccfff; /* dodgerblue-like */
+    --default-other-readings: #bccfff; /* dodgerblue-like */
     --divider: #727272;
     --information: #818181;
     --background-secondary: #3b3b3b;
@@ -215,19 +215,19 @@
     height: 0.4rem;
 }
 
-.barLocation {
+.bgLocation {
     background-color: var(--location);
 }
 
-.barFamily {
+.bgFamily {
     background-color: var(--family);
 }
 
-.barPerson {
+.bgPerson {
     background-color: var(--person);
 }
 
-/* ------------------------ READING ------------------------ */
+/* ------------------------ MAIN READING ------------------------ */
 
 .reading {
     margin-top: -0.14em;
@@ -236,29 +236,29 @@
     color: var(--default-reading);
 }
 
-.readingLocation {
+.fgLocation {
     color: var(--location);
 }
 
-.readingFamily {
+.fgFamily {
     color: var(--family);
 }
 
-.readingPerson {
+.fgPerson {
     color: var(--person);
 }
 
-/* ------------------------ MEANING ------------------------ */
+/* ------------------------ OTHER READINGS ------------------------ */
 
-.meaning {
+.otherReadings {
     max-width: var(--text-max-width);
     font-size: 130%;
     line-height: 1.45em;
-    /* font-weight: 500; */
-    color: var(--default-meaning);
+    font-weight: 600;
+    color: var(--default-other-readings);
 }
 
-.meaning {
+.otherReadings {
     --font-variation: 0em;
 
     --standard-top-margin: 0.25em;
@@ -268,6 +268,10 @@
 
     margin-top: var(--top-margin);
     margin-bottom: calc(var(--total-margin) - var(--top-margin));
+}
+
+.otherReadings > span:not(:last-child) {
+    margin-right: 0.5em;
 }
 
 /* ------------------------ TYPES ------------------------ */
@@ -415,19 +419,19 @@
     line-height: 100%;
 }
 
-:is(.hint, .meaning, .sentence):is(.font-hiraginosans, .font-hiraginomincho, .font-hiraginominchobold) {
+:is(.hint, .otherReadings, .sentence):is(.font-hiraginosans, .font-hiraginomincho, .font-hiraginominchobold) {
     --font-variation: 0.08em;
 }
 
 /* -- ACKAISYO -- */
 
-:is(.hint, .meaning, .sentence).font-ackaisyo {
+:is(.hint, .otherReadings, .sentence).font-ackaisyo {
     --font-variation: -0.03em;
 }
 
 /* -- YUMINCHO -- */
 
-:is(.hint, .meaning, .sentence).font-yumincho {
+:is(.hint, .otherReadings, .sentence).font-yumincho {
     --font-variation: 0.08em;
 }
 

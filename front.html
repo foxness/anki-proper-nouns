@@ -179,13 +179,12 @@
         cardExpression = `{{Expression}}`
         cardHint = `{{Hint}}`
         cardMainReading = `{{Main_Reading}}`
-        cardMeaning = `{{Other_Readings}}`
-        cardTrueSentence = `{{Explanation}}`
         cardMainReadingType = `{{Main_Reading_Type}}`
         cardMainReadingFrequency = `{{Main_Reading_Frequency}}`
         cardOtherReadings = `{{Other_Readings}}`
         cardOtherReadingsFrequency = `{{Other_Readings_Frequency}}`
         cardOtherReadingsTypes = `{{Other_Readings_Types}}`
+        cardTrueSentence = `{{Explanation}}`
 
         // additional anki fields addon
         let cardType = `{{info-Type:}}`
@@ -300,20 +299,7 @@
 
     function populateReading() {
         let readingElement = document.querySelector('.reading')
-        let elementClass = ''
-
-        switch (cardReadings[0].type) {
-        case CardType.Location:
-            elementClass = 'readingLocation'
-            break;
-        case CardType.Family:
-            elementClass = 'readingFamily'
-            break;
-        case CardType.Person:
-            elementClass = 'readingPerson'
-            break;
-        }
-
+        let elementClass = getTypeClass(false, cardReadings[0].type)
         readingElement.classList.add(elementClass)
     }
 
@@ -321,21 +307,9 @@
         let barElement = document.querySelector('.bar')
 
         let innerElement = document.createElement('div')
-        let elementClass = ''
-
-        switch (cardReadings[0].type) {
-        case CardType.Location:
-            elementClass = 'barLocation'
-            break;
-        case CardType.Family:
-            elementClass = 'barFamily'
-            break;
-        case CardType.Person:
-            elementClass = 'barPerson'
-            break;
-        }
-
+        let elementClass = getTypeClass(true, cardReadings[0].type)
         innerElement.classList.add(elementClass)
+        
         barElement.replaceChildren(innerElement)
     }
 
@@ -344,25 +318,31 @@
 
         for (const [type, frequency] of Object.entries(cardReadingTypes)) {
             let partElement = document.createElement('div')
-            let elementClass = ''
-
-            switch (type) {
-            case CardType.Location:
-                elementClass = 'barLocation'
-                break;
-            case CardType.Family:
-                elementClass = 'barFamily'
-                break;
-            case CardType.Person:
-                elementClass = 'barPerson'
-                break;
-            }
-
+            let elementClass = getTypeClass(true, type)
             partElement.classList.add(elementClass)
             partElement.style.flex = frequency
 
             barElement.appendChild(partElement)
         }
+    }
+
+    function populateOtherReadings() {
+        let otherReadingsElement = document.querySelector('.otherReadings')
+        otherReadingsElement.replaceChildren()
+
+        let otherReadings = cardReadings.slice(1)
+        otherReadings.forEach((reading, index) => {
+            let readingElement = document.createElement('span')
+            readingElement.replaceChildren(document.createTextNode(reading.reading))
+            let elementClass = getTypeClass(false, reading.type)
+            readingElement.classList.add(elementClass)
+
+            otherReadingsElement.appendChild(readingElement)
+
+            // if (index !== cardReadings.length - 1) {
+            //     otherReadingsElement.appendChild(document.createTextNode(' '))
+            // }
+        })
     }
 
     function populateTypes() {
@@ -373,18 +353,6 @@
         for (const [type, frequency] of Object.entries(cardReadingTypes)) {
             // let partElement = document.createElement('span')
             // let elementClass = ''
-
-            // switch (type) {
-            // case CardType.Location:
-            //     elementClass = 'barLocation'
-            //     break;
-            // case CardType.Family:
-            //     elementClass = 'barFamily'
-            //     break;
-            // case CardType.Person:
-            //     elementClass = 'barPerson'
-            //     break;
-            // }
 
             // partElement.classList.add(elementClass)
             // partElement.style.flex = frequency
@@ -589,6 +557,25 @@
         return null
     }
 
+    function getTypeClass(background, type) {
+        let firstPart = background ? 'bg' : 'fg'
+        let secondPart
+        
+        switch (type) {
+        case CardType.Location:
+            secondPart = 'Location'
+            break;
+        case CardType.Family:
+            secondPart = 'Family'
+            break;
+        case CardType.Person:
+            secondPart = 'Person'
+            break;
+        }
+
+        return firstPart + secondPart
+    }
+
     // ---------------- ANKI CONNECT ----------------
 
     function ankiSearch(query) {
@@ -727,7 +714,7 @@
     function tagJapaneseText() {
         // we tag these elements because they could be either english or japanese
 
-        let elements = document.querySelectorAll('.meaning, .definitionMeaning, .noteSimpleSection')
+        let elements = document.querySelectorAll('.otherReadings, .definitionMeaning, .noteSimpleSection')
         let japaneseElements = Array.from(elements).filter(element => getIsJapanese(element.textContent))
 
         japaneseElements.forEach((element) => {
@@ -941,6 +928,7 @@
         // populateReading()
         // populateBar()
         // populateBarComplex()
+        // populateOtherReadings()
         // populateTypes()
         // varyReadingKana()
         // addLinkToReading()
@@ -960,6 +948,7 @@
         populateReading()
         // populateBar()
         populateBarComplex()
+        populateOtherReadings()
         populateTypes()
         varyReadingKana()
         addLinkToReading()
