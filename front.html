@@ -327,21 +327,23 @@
     }
 
     function populateOtherReadings() {
+        let sameReadingSymbol = '▲'
+
         let otherReadingsElement = document.querySelector('.otherReadings')
         otherReadingsElement.replaceChildren()
 
         let otherReadings = cardReadings.slice(1)
-        otherReadings.forEach((reading, index) => {
+        otherReadings.forEach(reading => {
             let readingElement = document.createElement('span')
-            readingElement.replaceChildren(document.createTextNode(reading.reading))
+
+            let current = reading.reading
+            let text = current === cardReadings[0].reading ? sameReadingSymbol : current
+            readingElement.replaceChildren(document.createTextNode(text))
+
             let elementClass = getTypeClass(false, reading.type)
             readingElement.classList.add(elementClass)
 
             otherReadingsElement.appendChild(readingElement)
-
-            // if (index !== cardReadings.length - 1) {
-            //     otherReadingsElement.appendChild(document.createTextNode(' '))
-            // }
         })
     }
 
@@ -950,7 +952,7 @@
         populateBarComplex()
         populateOtherReadings()
         populateTypes()
-        varyReadingKana()
+        // varyReadingKana()
         addLinkToReading()
         addLinkToImage()
 
