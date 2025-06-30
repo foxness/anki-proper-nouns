@@ -205,7 +205,7 @@
         cardSentence = cardTrueSentence === '' ? cardExpression : cardTrueSentence
 
         cardReadings = getReadings()
-        // alert(`${JSON.stringify(cardReadings)}`)
+        cardReadingTypes = getReadingTypes(cardReadings)
 
         riverIsFrontOfCard = getIsFrontOfCard()
         riverIsKatakanaCard = getIsKatakanaCard()
@@ -342,10 +342,7 @@
     function populateBarComplex() {
         let barElement = document.querySelector('.bar')
 
-        let barParts = getBarParts(cardReadings)
-        // alert(JSON.stringify(barParts))
-
-        for (const [type, frequency] of Object.entries(barParts)) {
+        for (const [type, frequency] of Object.entries(cardReadingTypes)) {
             let partElement = document.createElement('div')
             let elementClass = ''
 
@@ -366,6 +363,39 @@
 
             barElement.appendChild(partElement)
         }
+    }
+
+    function populateTypes() {
+        let typeElement = document.querySelector('.types')
+
+        let typeStrings = []
+
+        for (const [type, frequency] of Object.entries(cardReadingTypes)) {
+            // let partElement = document.createElement('span')
+            // let elementClass = ''
+
+            // switch (type) {
+            // case CardType.Location:
+            //     elementClass = 'barLocation'
+            //     break;
+            // case CardType.Family:
+            //     elementClass = 'barFamily'
+            //     break;
+            // case CardType.Person:
+            //     elementClass = 'barPerson'
+            //     break;
+            // }
+
+            // partElement.classList.add(elementClass)
+            // partElement.style.flex = frequency
+
+            // barElement.appendChild(partElement)
+
+            typeStrings.push(`${type} ${frequency}%`)
+        }
+
+        let typeString = typeStrings.join('  ')
+        typeElement.replaceChildren(document.createTextNode(typeString))
     }
 
     function varyReadingKana() {
@@ -870,7 +900,7 @@
         return readings
     }
 
-    function getBarParts(readings) {
+    function getReadingTypes(readings) {
         let parts = {}
         let types = new Set(readings.map(a => a.type))
 
@@ -911,6 +941,7 @@
         // populateReading()
         // populateBar()
         // populateBarComplex()
+        // populateTypes()
         // varyReadingKana()
         // addLinkToReading()
         // addLinkToImage()
@@ -929,6 +960,7 @@
         populateReading()
         // populateBar()
         populateBarComplex()
+        populateTypes()
         varyReadingKana()
         addLinkToReading()
         addLinkToImage()

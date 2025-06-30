@@ -270,6 +270,16 @@
     margin-bottom: calc(var(--total-margin) - var(--top-margin));
 }
 
+/* ------------------------ TYPES ------------------------ */
+
+.types {
+    margin-top: -0.2em;
+    margin-bottom: 0.3em;
+    color: var(--notes-simple);
+
+    font-size: 90%;
+}
+
 /* ------------------------ NOTES ------------------------ */
 
 .notes {
