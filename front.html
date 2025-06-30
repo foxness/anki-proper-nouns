@@ -178,10 +178,14 @@
         // backticks to avoid single and double quotes in anki fields escaping the string literal
         cardExpression = `{{Expression}}`
         cardHint = `{{Hint}}`
-        cardTrueReading = `{{Main_Reading}}`
+        cardMainReading = `{{Main_Reading}}`
         cardMeaning = `{{Other_Readings}}`
         cardTrueSentence = `{{Explanation}}`
         cardMainReadingType = `{{Main_Reading_Type}}`
+        cardMainReadingFrequency = `{{Main_Reading_Frequency}}`
+        cardOtherReadings = `{{Other_Readings}}`
+        cardOtherReadingsFrequency = `{{Other_Readings_Frequency}}`
+        cardOtherReadingsTypes = `{{Other_Readings_Types}}`
 
         // additional anki fields addon
         let cardType = `{{info-Type:}}`
@@ -197,8 +201,11 @@
 
         cardIsNewOrLearning = cardIsNew || cardIsLearning
 
-        cardReading = cardTrueReading === '' ? cardExpression : cardTrueReading
+        cardReading = cardMainReading === '' ? cardExpression : cardMainReading
         cardSentence = cardTrueSentence === '' ? cardExpression : cardTrueSentence
+
+        cardReadings = getReadings()
+        // alert(`${JSON.stringify(cardReadings)}`)
 
         riverIsFrontOfCard = getIsFrontOfCard()
         riverIsKatakanaCard = getIsKatakanaCard()
@@ -243,7 +250,16 @@
         riverCurrentFont = null
     }
 
+    function defineTypes() {
+        CardType = {
+            Location: 'loc',
+            Family: 'fam',
+            Person: 'per'
+        }
+    }
+
     function defineGlobalVariables() {
+        defineTypes()
         defineConstants()
         defineCardVariables()
         defineRandomVariables()
@@ -286,15 +302,16 @@
         let readingElement = document.querySelector('.reading')
         let elementClass = ''
 
-        if (cardMainReadingType === 'loc') {
+        switch (cardReadings[0].type) {
+        case CardType.Location:
             elementClass = 'readingLocation'
-        } else if (cardMainReadingType === 'fam') {
+            break;
+        case CardType.Family:
             elementClass = 'readingFamily'
-        } else if (cardMainReadingType === 'per') {
+            break;
+        case CardType.Person:
             elementClass = 'readingPerson'
-        } else {
-            elementClass = 'readingLocation'
-            alert('unknown Main_Reading_Type')
+            break;
         }
 
         readingElement.classList.add(elementClass)
@@ -306,15 +323,16 @@
         let innerElement = document.createElement('div')
         let elementClass = ''
 
-        if (cardMainReadingType === 'loc') {
+        switch (cardReadings[0].type) {
+        case CardType.Location:
             elementClass = 'barLocation'
-        } else if (cardMainReadingType === 'fam') {
+            break;
+        case CardType.Family:
             elementClass = 'barFamily'
-        } else if (cardMainReadingType === 'per') {
+            break;
+        case CardType.Person:
             elementClass = 'barPerson'
-        } else {
-            elementClass = 'barLocation'
-            alert('unknown Main_Reading_Type')
+            break;
         }
 
         innerElement.classList.add(elementClass)
@@ -761,6 +779,66 @@
         let link = `https://www.google.com/search?q=${cardExpression}&udm=2&lr=lang_ja`
         
         return makeLinkElement(link, inner)
+    }
+
+    // ---------------- VARIABLE PROCESSING ----------------
+
+    function getCardType(rawType) {
+        for (let [key, value] of Object.entries(CardType)) {
+            if (rawType === value) {
+                return value
+            }
+        }
+
+        alert('unknown Reading Type')
+        return null
+    }
+
+    function getFrequency(rawFrequency) {
+        return Number(rawFrequency.slice(0, -1))
+    }
+
+    function getReadings() {
+        // cardMainReading = `{{Main_Reading}}`
+        // cardMainReadingType = `{{Main_Reading_Type}}`
+        // cardMainReadingFrequency = `{{Main_Reading_Frequency}}`
+        // cardOtherReadings = `{{Other_Readings}}`
+        // cardOtherReadingsFrequency = `{{Other_Readings_Frequency}}`
+        // cardOtherReadingsTypes = `{{Other_Readings_Types}}`
+
+        let readings = []
+        let mainReading = {
+            reading: cardMainReading,
+            type: getCardType(cardMainReadingType),
+            frequency: getFrequency(cardMainReadingFrequency)
+        }
+
+        readings.push(mainReading)
+
+        if (cardOtherReadings.length === 0) {
+            return readings
+        }
+
+        let delimiter = ' / '
+        let otherReadings = cardOtherReadings.split(delimiter)
+        let otherReadingsFrequencies = cardOtherReadingsFrequency.split(delimiter)
+        let otherReadingsTypes = cardOtherReadingsTypes.split(delimiter)
+
+        if (otherReadings.length !== otherReadingsFrequencies.length
+            || otherReadings.length !== otherReadingsTypes.length) {
+            
+            alert('inconsistent number of other readings')
+        }
+
+        otherReadings.forEach((value, index) => {
+            readings.push({
+                reading: value,
+                type: getCardType(otherReadingsTypes[index]),
+                frequency: getFrequency(otherReadingsFrequencies[index])
+            })
+        })
+
+        return readings
     }
 
     // ---------------- NOTE DEFINITION HIGHLIGHTING ----------------
