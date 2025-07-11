@@ -328,17 +328,12 @@
     }
 
     function populateOtherReadings() {
-        let sameReadingSymbol = '▲'
-
         let otherReadingsElement = document.querySelector('.otherReadings')
         otherReadingsElement.replaceChildren()
 
         cardUniqueOtherReadings.forEach(reading => {
             let readingElement = document.createElement('span')
-
-            let current = reading.reading
-            let text = current === cardReadings[0].reading ? sameReadingSymbol : current
-            readingElement.replaceChildren(document.createTextNode(text))
+            readingElement.replaceChildren(document.createTextNode(reading.reading))
 
             let elementClass = getTypeClass(false, reading.type)
             readingElement.classList.add(elementClass)
@@ -904,19 +899,23 @@
     }
 
     function getUniqueOtherReadings(readings) {
+        // this method assumes 'readings' is frequency sorted
+
+        let mainReadingSymbol = '▲'
         let result = []
 
-        let otherReadings = readings.slice(1)
-        let unique = new Set(otherReadings.map(a => a.reading))
-
-        unique.forEach(reading => {
-            let same = otherReadings.filter(a => a.reading === reading)
-            same.sort((a, b) => b.frequency - a.frequency)
-
-            result.push(same[0])
+        let mainReading = readings[0].reading
+        readings.forEach(reading => {
+            if (result.every(a => a.reading !== reading.reading)) {
+                result.push(reading)
+            } else if (reading.reading === mainReading) {
+                let changed = reading
+                changed.reading = mainReadingSymbol
+                result.push(changed)
+            }
         })
 
-        return result
+        return result.slice(1) // dont include the main reading
     }
 
     // ---------------- NOTE DEFINITION HIGHLIGHTING ----------------
