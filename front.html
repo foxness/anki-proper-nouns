@@ -205,6 +205,7 @@
 
         cardReadings = getReadings()
         cardReadingTypes = getReadingTypes(cardReadings)
+        cardUniqueOtherReadings = getUniqueOtherReadings(cardReadings)
 
         riverIsFrontOfCard = getIsFrontOfCard()
         riverIsKatakanaCard = getIsKatakanaCard()
@@ -332,8 +333,7 @@
         let otherReadingsElement = document.querySelector('.otherReadings')
         otherReadingsElement.replaceChildren()
 
-        let otherReadings = cardReadings.slice(1)
-        otherReadings.forEach(reading => {
+        cardUniqueOtherReadings.forEach(reading => {
             let readingElement = document.createElement('span')
 
             let current = reading.reading
@@ -901,6 +901,22 @@
         })
 
         return parts
+    }
+
+    function getUniqueOtherReadings(readings) {
+        let result = []
+
+        let otherReadings = readings.slice(1)
+        let unique = new Set(otherReadings.map(a => a.reading))
+
+        unique.forEach(reading => {
+            let same = otherReadings.filter(a => a.reading === reading)
+            same.sort((a, b) => b.frequency - a.frequency)
+
+            result.push(same[0])
+        })
+
+        return result
     }
 
     // ---------------- NOTE DEFINITION HIGHLIGHTING ----------------
