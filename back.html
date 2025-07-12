@@ -72,10 +72,6 @@
 
         riverCycleFontKey = 'j'
 
-        // --- READING KANA ---
-
-        riverProbabilityReadingHiragana = 1/3
-
         // --- FONTS ---
 
         defineFontConstants()
@@ -262,9 +258,7 @@
         riverTodayFont = getTodaysFont(cardAgnosticRandom())
         riverCardSpecificFont = getCardSpecificFont(random())
         riverKanaFont = getKanaFont(random())
-        riverIsHiraganaReading = random() < riverProbabilityReadingHiragana
 
-        riverVariedKanaReading = getVariedKanaReading()
         riverDefaultFont = getDefaultFont()
         riverCurrentFont = null
     }
@@ -380,11 +374,6 @@
 
         let typeString = typeStrings.join('  ')
         typeElement.replaceChildren(document.createTextNode(typeString))
-    }
-
-    function varyReadingKana() {
-        let readingElement = document.querySelector('.reading')
-        readingElement.innerHTML = riverVariedKanaReading
     }
 
     function addLinkToReading() {
@@ -533,25 +522,6 @@
         // review viewport: (969, 892)
         // preview viewport: (887, 829)
         return viewportHeight < 850
-    }
-
-    function translateKana(source, toHiragana) {
-        let hira = "ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんゔゕゖゝゞ";
-        let kata = "ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶヽヾ";
-
-        let getIndices = (word, kana) => {
-            return word.map(char => {
-                let i = kana.indexOf(char)
-                return i === -1 ? char : i
-            })
-        }
-
-        let word = [...source]
-        word = getIndices(word, hira)
-        word = getIndices(word, kata)
-
-        let targetKana = toHiragana ? hira : kata
-        return word.map(i => typeof i === 'number' ? targetKana[i] : i).join('')
     }
 
     function sampleOneRandomly(random, samples) {
@@ -811,16 +781,6 @@
         })
     }
 
-    // ---------------- KANA VARIATION ----------------
-
-    function getVariedKanaReading() {
-        if (cardReading.includes('ー')) { // katakana prolongation mark
-            return cardReading
-        }
-
-        return translateKana(cardReading, riverIsHiraganaReading)
-    }
-
     // ---------------- LINK ADDING ----------------
 
     function makeLinkElement(link, inner) {
@@ -966,7 +926,6 @@
         // populateBarComplex()
         // populateOtherReadings()
         // populateTypes()
-        // varyReadingKana()
         // addLinkToReading()
         // addLinkToImage()
 
@@ -986,7 +945,6 @@
         populateBarComplex()
         populateOtherReadings()
         populateTypes()
-        // varyReadingKana()
         addLinkToReading()
         addLinkToImage()
 
