@@ -357,22 +357,13 @@
 
     function populateTypes() {
         let typeElement = document.querySelector('.types')
-
         let typeStrings = []
 
         for (const [type, frequency] of Object.entries(cardReadingTypes)) {
-            // let partElement = document.createElement('span')
-            // let elementClass = ''
-
-            // partElement.classList.add(elementClass)
-            // partElement.style.flex = frequency
-
-            // barElement.appendChild(partElement)
-
             typeStrings.push(`${type} ${frequency}%`)
         }
 
-        let typeString = typeStrings.join('  ')
+        let typeString = typeStrings.join(' ')
         typeElement.replaceChildren(document.createTextNode(typeString))
     }
 
