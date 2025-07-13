@@ -284,6 +284,22 @@
     font-size: 90%;
 }
 
+.types > span:not(:last-child) {
+    margin-right: 0.6em;
+}
+
+.typeLocation {
+    color: color-mix(in lab, var(--notes-simple), var(--location) 20%);
+}
+
+.typeFamily {
+    color: color-mix(in lab, var(--notes-simple), var(--family) 20%);
+}
+
+.typePerson {
+    color: color-mix(in lab, var(--notes-simple), var(--person) 20%);
+}
+
 /* ------------------------ NOTES ------------------------ */
 
 .notes {

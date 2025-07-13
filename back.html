@@ -99,6 +99,7 @@
         // cannot be null
         // can be [], means use regular font
         riverDayFontProbabilities = [
+            ['notosans', 0],
             ['hiraginosans', 0],
             ['hiraginomincho', 0], // 0.02
             ['hiraginominchobold', 0], // 0.005
@@ -313,7 +314,7 @@
 
     function populateReading() {
         let readingElement = document.querySelector('.reading')
-        let elementClass = getTypeClass(false, cardReadings[0].type)
+        let elementClass = getTypeClass('fg', cardReadings[0].type)
         readingElement.classList.add(elementClass)
     }
 
@@ -321,7 +322,7 @@
         let barElement = document.querySelector('.bar')
 
         let innerElement = document.createElement('div')
-        let elementClass = getTypeClass(true, cardReadings[0].type)
+        let elementClass = getTypeClass('bg', cardReadings[0].type)
         innerElement.classList.add(elementClass)
         
         barElement.replaceChildren(innerElement)
@@ -332,7 +333,7 @@
 
         for (const [type, frequency] of Object.entries(cardReadingTypes)) {
             let partElement = document.createElement('div')
-            let elementClass = getTypeClass(true, type)
+            let elementClass = getTypeClass('bg', type)
             partElement.classList.add(elementClass)
             partElement.style.flex = frequency
 
@@ -348,7 +349,7 @@
             let readingElement = document.createElement('span')
             readingElement.replaceChildren(document.createTextNode(reading.reading))
 
-            let elementClass = getTypeClass(false, reading.type)
+            let elementClass = getTypeClass('fg', reading.type)
             readingElement.classList.add(elementClass)
 
             otherReadingsElement.appendChild(readingElement)
@@ -356,15 +357,18 @@
     }
 
     function populateTypes() {
-        let typeElement = document.querySelector('.types')
-        let typeStrings = []
+        let containerElement = document.querySelector('.types')
+        containerElement.replaceChildren()
 
         for (const [type, frequency] of Object.entries(cardReadingTypes)) {
-            typeStrings.push(`${type} ${frequency}%`)
-        }
+            let typeElement = document.createElement('span')
+            typeElement.replaceChildren(document.createTextNode(`${type} ${frequency}%`))
 
-        let typeString = typeStrings.join(' ')
-        typeElement.replaceChildren(document.createTextNode(typeString))
+            let elementClass = getTypeClass('type', type)
+            typeElement.classList.add(elementClass)
+
+            containerElement.appendChild(typeElement)
+        }
     }
 
     function addLinkToReading() {
@@ -534,10 +538,8 @@
         return null
     }
 
-    function getTypeClass(background, type) {
-        let firstPart = background ? 'bg' : 'fg'
+    function getTypeClass(firstPart, type) {
         let secondPart
-        
         switch (type) {
         case CardType.Location:
             secondPart = 'Location'
