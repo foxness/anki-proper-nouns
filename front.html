@@ -338,12 +338,31 @@
     }
 
     function populateTypes() {
+        // Available modes:
+        // 'textPercentages'
+        // 'percentages'
+        // 'nothing'
+
+        let mode = 'nothing'
+
         let containerElement = document.querySelector('.types')
+        if (mode === 'nothing') {
+            containerElement.classList.add('noTypes')
+            return
+        }
+
         containerElement.replaceChildren()
 
         for (const [type, frequency] of Object.entries(cardReadingTypes)) {
+            let text
+            if (mode === 'textPercentages') {
+                text = `${type} ${frequency}%`
+            } else {
+                text = `${frequency}%`
+            }
+
             let typeElement = document.createElement('span')
-            typeElement.replaceChildren(document.createTextNode(`${type} ${frequency}%`))
+            typeElement.replaceChildren(document.createTextNode(text))
 
             let elementClass = getTypeClass('type', type)
             typeElement.classList.add(elementClass)

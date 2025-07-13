@@ -288,6 +288,10 @@
     margin-right: 0.6em;
 }
 
+.noTypes {
+    display: none;
+}
+
 .typeLocation {
     color: color-mix(in lab, var(--notes-simple), var(--location) 20%);
 }
