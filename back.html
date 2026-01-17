@@ -300,6 +300,15 @@
         }
     }
 
+    function handleMobile() {
+        if (!riverIsMobile) {
+            return
+        }
+
+        let containerElement = document.querySelector('.container')
+        containerElement.classList.add('mobile')
+    }
+
     function addLinkToExpression() {
         let expressionElement = document.querySelector('.expression')
 
@@ -821,7 +830,7 @@
 
     function makeGoogleImagesLinkElement(inner) {
         // let link = `https://www.google.com/search?q=${cardExpression}&udm=2`
-        let link = `https://www.google.com/search?q=${cardExpression}&udm=2&lr=lang_ja`
+        let link = `https://www.google.com/search?q=${cardExpression}+${cardReading}&udm=2&lr=lang_ja`
 
         return makeLinkElement(link, inner)
     }
@@ -941,6 +950,7 @@
 
     function mainFront() {
         indicateCard()
+        handleMobile()
         addLinkToExpression()
         fixCopypaste()
 
@@ -960,6 +970,7 @@
 
     function mainBack() {
         indicateCard()
+        handleMobile()
         addLinkToExpression()
         fixCopypaste()
 
